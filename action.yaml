@@ -1,0 +1,22 @@
+name: 'openvpn'
+description: ''
+inputs:
+  openvpn_config:
+    description: ''
+    required: true
+  validation_addr:
+    description: ''
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - run: sudo apt-get update
+      shell: bash 
+    - run: sudo apt-get install -y openvpn traceroute
+      shell: bash
+    - run: echo "${{ inputs.openvpn_config }}" | sudo tee /etc/openvpn/client/client.conf > /dev/null
+      shell: bash
+    - run: sudo systemctl start openvpn-client@client || (journalctl -xeu openvpn-client@client && exit 1)
+      shell: bash
+    - run: sudo traceroute -m 2 -T $(echo "${{ inputs.validation_addr }}"  | sed -e 's|^[^/]*//||' -e 's|/.*$||')
+      shell: bash

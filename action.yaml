@@ -1,4 +1,4 @@
-name: 'openvpn'
+name: openvpn
 description: ''
 inputs:
   openvpn_config:
@@ -8,7 +8,7 @@ inputs:
     description: ''
     required: true
 runs:
-  using: 'composite'
+  using: composite
   steps:
     - run: sudo apt-get update
       shell: bash 
